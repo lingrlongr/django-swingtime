@@ -14,7 +14,7 @@ def event_type(request, abbr):
         start_time__lte=now+timedelta(days=+30)
     )
     return render_to_response(
-        'karate/upcoming_by_event_type.html', 
+        'karate/upcoming_by_event_type.html',
         dict(occurrences=occurrences, event_type=event_type),
         context_instance=RequestContext(request)
     )

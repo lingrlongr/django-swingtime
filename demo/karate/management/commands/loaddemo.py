@@ -2,7 +2,7 @@
 ================================================================================
 Welcome to the django-swingtime demo project. This project's' is theme is a
 Karate dojo and the database will be pre-populated with some data relative to
-today's date. 
+today's date.
 ================================================================================
 '''
 from django.core.management import call_command
@@ -16,7 +16,7 @@ from swingtime import models as swingtime
 
 #-------------------------------------------------------------------------------
 def create_sample_data():
-    
+
     # Create the studio's event types
     ets = dict((
         (abbr, swingtime.EventType.objects.create(abbr=abbr, label=label))
@@ -34,9 +34,9 @@ def create_sample_data():
     print 'Created event types: %s' % (
         ', '.join(['%s' % et for et in swingtime.EventType.objects.all()]),
     )
-    
+
     now = datetime.now()
-    
+
     # create a single occurrence event
     evt = swingtime.create_event(
         'Grand Opening',
@@ -47,7 +47,7 @@ def create_sample_data():
         note='Free tea, sushi, and sake'
     )
     print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
-    
+
     # create an event with multiple occurrences by fixed count
     evt = swingtime.create_event(
         'Beginner Class',
@@ -102,11 +102,11 @@ def create_sample_data():
 #===============================================================================
 class Command(NoArgsCommand):
     help = 'Run the swingtime demo. If an existing demo database exists, it will recreated.'
-    
+
     #---------------------------------------------------------------------------
     def handle_noargs(self, **options):
         import os
-        
+
         dbpath = os.path.join(settings.PROJECT_DIR, settings.DATABASES['default']['NAME'])
         if os.path.exists(dbpath):
             print 'Removing', dbpath
