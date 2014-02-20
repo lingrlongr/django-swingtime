@@ -14,8 +14,15 @@ __all__ = (
     'EventType',
     'Event',
     'Occurrence',
-    'create_event'
+    'Location',
+    'create_event',
 )
+
+class Location(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
 
 #===============================================================================
 class Note(models.Model):
@@ -69,6 +76,7 @@ class Event(models.Model):
     description = models.CharField(_('description'), max_length=100)
     event_type = models.ForeignKey(EventType, verbose_name=_('event type'))
     notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    location = models.ForeignKey(Location)
 
     #===========================================================================
     class Meta:
@@ -183,6 +191,7 @@ class Occurrence(models.Model):
     end_time = models.DateTimeField(_('end time'))
     event = models.ForeignKey(Event, verbose_name=_('event'), editable=False)
     notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    location = models.ForeignKey(Location, null=True, blank=True)
 
     objects = OccurrenceManager()
 
@@ -191,6 +200,13 @@ class Occurrence(models.Model):
         verbose_name = _('occurrence')
         verbose_name_plural = _('occurrences')
         ordering = ('start_time', 'end_time')
+
+    def save(self, *args, **kwargs):
+        # if no location specified, use event's location if specified
+        if not self.location:
+            if self.event.location:
+                self.location = self.event.location
+        super(Occurrence, self).save(*args, **kwargs)
 
     #---------------------------------------------------------------------------
     def __unicode__(self):

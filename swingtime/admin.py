@@ -23,10 +23,13 @@ class EventNoteInline(generic.GenericTabularInline):
     model = Note
     extra = 1
 
+class LocationAdmin(admin.ModelAdmin):
+    pass
+
 
 #===============================================================================
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'event_type', 'description')
+    list_display = ('title', 'event_type', 'description', 'location')
     list_filter = ('event_type', )
     search_fields = ('title', 'description')
     inlines = [EventNoteInline, OccurrenceInline]
@@ -35,3 +38,4 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Note, NoteAdmin)
+admin.site.register(Location, LocationAdmin)
