@@ -203,6 +203,12 @@ class Occurrence(models.Model):
     end_time = models.DateTimeField(_('end time'))
     event = models.ForeignKey(Event, verbose_name=_('event'), editable=False)
     notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    require_signup = models.BooleanField(default=False)
+    organizers = models.ManyToManyField(User, related_name='event_organizers',
+                                        help_text='People that are hosting this event.')
+    attendees = models.ManyToManyField(User, null=True, blank=True, 
+                                       related_name='event_attendees',
+                                       help_text='People that signed up for this event.')
     location = models.ForeignKey(Location, null=True, blank=True)
 
     objects = OccurrenceManager()
