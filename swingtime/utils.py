@@ -8,6 +8,7 @@ import itertools
 
 from django.db.models.query import QuerySet
 from django.utils.safestring import mark_safe
+from django.utils import timezone
 
 from dateutil import rrule
 from swingtime.conf import settings as swingtime_settings
@@ -151,6 +152,9 @@ def create_timeslot_table(
     from swingtime.models import Occurrence
     dt = dt or datetime.now()
     dtstart = datetime.combine(dt.date(), start_time)
+    # make timezone aware
+    dtstart = timezone.make_aware(dtstart, timezone.get_default_timezone())
+
     dtend = dtstart + end_time_delta
 
     if isinstance(items, QuerySet):
