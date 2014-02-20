@@ -9,6 +9,8 @@ from django.conf import settings
 
 from dateutil import rrule
 
+from paintstore.fields import ColorPickerField
+
 __all__ = (
     'Note',
     'EventType',
@@ -76,6 +78,8 @@ class Event(models.Model):
     description = models.CharField(_('description'), max_length=100)
     event_type = models.ForeignKey(EventType, verbose_name=_('event type'))
     notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    color = ColorPickerField()
+    background_color = ColorPickerField()
     location = models.ForeignKey(Location)
 
     #===========================================================================
@@ -92,6 +96,14 @@ class Event(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('swingtime-event', [str(self.id)])
+
+    #---------------------------------------------------------------------------
+    def save(self, *args, **kwargs):
+        if not self.color.startswith('#'):
+            self.color = '#%s' % self.color[:6]
+        if not self.background_color.startswith('#'):
+            self.background_color = '#%s' % self.background_color[:6]
+        super(Event, self).save(*args, **kwargs)
 
     #---------------------------------------------------------------------------
     def add_occurrences(self, start_time, end_time, **rrule_params):
